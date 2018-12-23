@@ -19,3 +19,7 @@ su - genomics
 
 # go to bwa folder
 make
+# copy sra-toolkits
+
+wget ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR735/SRR7358183/SRR7358183.sra
+
