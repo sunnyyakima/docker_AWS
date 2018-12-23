@@ -1,0 +1,21 @@
+
+# create an empy ubuntu
+docker run  --name myown_ubuntu -v /Users/yuliu/Software/docker_source:/bwa_source  -t -i  ubuntu
+
+# install essential libs
+apt-get update
+apt-get install build-essential
+apt-get install vim
+apt-get install sudo
+apt-get install wget
+
+# add new user
+https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
+adduser genomics
+# passwd is same as username
+usermod -aG sudo genomics
+su - genomics
+# edit .bashrc file for $PATH
+
+# go to bwa folder
+make
