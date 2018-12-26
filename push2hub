@@ -7,3 +7,11 @@ docker tag  image_id  yourhubusername/dockerimagename:firsttry
 
 docker push yourhubusername/dockerimagename
 
+docker system prune -a   # clear all images
+docker rmi Image1 Image2
+docker images -f dangling=true
+docker images purge  # remove the dangling image
+
+
+docker pull  yuliu2005ca/sema4cnv0:firsttry
+
