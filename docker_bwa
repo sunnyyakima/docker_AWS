@@ -1,6 +1,11 @@
+# search a docker image
+docker search ubuntu
 
-# create an empy ubuntu
-docker run  --name myown_ubuntu -v /Users/yuliu/Software/docker_source:/bwa_source  -t -i  ubuntu
+# pull an image
+docker pull ubun tu
+
+# create an orignal ubuntu
+docker run  --name sema4CNV -v /Users/yuliu/Software/docker_source:/cnv_source  -t -i  ubuntu
 
 # install essential libs
 apt-get update
@@ -9,16 +14,19 @@ apt-get install vim
 apt-get install sudo
 apt-get install wget
 apt-get install python3
-apt-get install openjdk-8-jre
+#apt-get install openjdk-8-jre
 apt-get install default-jdk
+apt-get install zlib1g-dev  # required by bwa
+
 
 # add new user
 https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
 adduser genomics
-# passwd is same as username
+# create a password
 usermod -aG sudo genomics
 su - genomics
 # edit .bashrc file for $PATH
+source ~/.bashrc
 
 # go to bwa folder
 make
