@@ -1,0 +1,9 @@
+
+docker login --username=yourhubusername
+
+docker images
+
+docker tag  image_id  yourhubusername/dockerimagename:firsttry
+
+docker push yourhubusername/dockerimagename
+
