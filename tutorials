@@ -15,5 +15,8 @@ https://software.broadinstitute.org/gatk/documentation/article?id=11090
 # docker tutorial
 https://rominirani.com/docker-tutorial-series-a7e6ff90a023
 
+# docker commit
+https://blog.codeship.com/using-docker-commit-to-create-and-change-an-image/
+
 # aws ecs tutorial
 https://medium.com/boltops/gentle-introduction-to-how-aws-ecs-works-with-example-tutorial-cea3d27ce63d
