@@ -1,0 +1,12 @@
+
+# creat a repository
+aws ecr create-repository --repository-name hello-repository
+
+# pull an image
+docker pull busybox
+
+# tag, login & push to ECR
+docker tag busybox aws_account_id.dkr.ecr.us-east-1.amazonaws.com/hello-repository
+aws ecr get-login --no-include-email
+docker push aws_account_id.dkr.ecr.us-east-1.amazonaws.com/hello-repository
+
