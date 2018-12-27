@@ -28,7 +28,7 @@ apt-get install libncursesw5-dev
 apt-get install liblzma-dev
 apt-get install git
 apt-get install  git-lfs 
-apt-get install  gradle
+apt-get install  gradle   # may not be necessary
 
 # install R
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
@@ -52,7 +52,7 @@ wget https://github.com/samtools/bcftools/releases/download/1.9/bcftools-1.9.tar
 # tar, go to folder
 make
 
-# install conda :https://conda.io/docs/user-guide/install/linux.html
+# install conda :https://conda.io/docs/user-guide/install/linux.html    # may not be necessary
 # install gatk: https://github.com/broadinstitute/gatk#downloading
 
 # copy sra-toolkits
