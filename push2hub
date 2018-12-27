@@ -12,6 +12,10 @@ docker rmi Image1 Image2
 docker images -f dangling=true
 docker images purge  # remove the dangling image
 
-
 docker pull  yuliu2005ca/sema4cnv0:firsttry
 
+# genersate Dockerfile from docker image
+docker serarch chenzj/dfimage
+docker pull chenzj/dfimage
+alias dfimage="docker run -v /var/run/docker.sock:/var/run/docker.sock --rm chenzj/dfimage"
+dfimage IMAGE_ID > Dockerfile
