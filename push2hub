@@ -1,3 +1,5 @@
+# docker commit running_container new_image_name
+docker commit sema4CNV yuliu2005ca/sema4cnv1:secondtry
 
 docker login --username=yourhubusername
 
