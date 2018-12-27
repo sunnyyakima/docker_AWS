@@ -15,7 +15,8 @@ apt-get install sudo
 apt-get install wget
 apt-get install python3
 #apt-get install openjdk-8-jre
-apt-get install default-jdk
+#apt-get install default-jdk
+sudo apt install openjdk-8-jdk
 apt-get install zlib1g-dev  # required by bwa
 apt-get install libbz2-dev
 apt-get install libncurses5-dev 
