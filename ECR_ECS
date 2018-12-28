@@ -7,7 +7,7 @@ docker pull busybox
 
 # tag, login 
 docker tag busybox aws_account_id.dkr.ecr.us-east-1.amazonaws.com/hello-repository
-aws ecr get-login --no-include-email
+aws ecr get-login --no-include-email --region us-east-1
 # copy & paste the output from last command, then enter, it is kind of like:
 docker login -u AWS -p DFGGGB.....
 
