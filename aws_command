@@ -1,0 +1,3 @@
+# get AWS Account number from the cli tools: Secure Token Service
+aws sts get-caller-identity --output text --query 'Account'
+
