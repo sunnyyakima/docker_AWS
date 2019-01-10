@@ -1,3 +1,5 @@
+# switch between account
+export AWS_PROFILE=  # the id in [profile]
 
 # get AWS Account number from the cli tools: Secure Token Service
 aws sts get-caller-identity --output text --query 'Account'
@@ -7,3 +9,4 @@ ssh -i "/path/to/keypair.pem"  ec2-user@ec2-N-NN-NN-NNN.compute-1.amazonaws.com
 
 # copy file to EC2
 scp -i "/path/to/keypair.pem"  file2copy.png  ec2-user@ec2-N-NN-NN-NNN.compute-1.amazonaws.com:/home/ec2-user
+
