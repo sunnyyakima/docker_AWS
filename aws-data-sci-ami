@@ -1,0 +1,11 @@
+
+# RNA-Seq analysis pipeline: STAR, RNA-SeQC
+
+sudo yum update
+sudo yum install java-1.7.0-openjdk-devel: required by RNA-SeQC
+sudo yum install git
+sudo yum install wget
+sudo yum group install "Development Tools"
+sudo easy_install pip
+
+git clone https://github.com/alexdobin/STAR.git
