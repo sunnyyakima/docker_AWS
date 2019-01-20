@@ -9,3 +9,11 @@ sudo yum group install "Development Tools"
 sudo easy_install pip
 
 git clone https://github.com/alexdobin/STAR.git
+
+wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2
+tar -xvf samtools-1.9.tar.bz2 
+cd samtools-1.9
+./configure
+make
+make install
+
