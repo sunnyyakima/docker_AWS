@@ -13,3 +13,5 @@ scp -i "/path/to/keypair.pem"  file2copy.png  ec2-user@ec2-N-NN-NN-NNN.compute-1
 # creat a folder/subbucket in an already existed bucket 
 aws s3api put-object --bucket <your-bucket-name> --key <folder-name>/yourfile.txt --body yourfile.txt
 
+export AWS_PROFILE=user2  # user2 is in the /.aws/credentials
+
