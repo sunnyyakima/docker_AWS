@@ -1,5 +1,6 @@
 # switch between account
 export AWS_PROFILE=  # the id in [profile]
+export AWS_PROFILE=user2  # user2 is in the /.aws/credentials
 
 # get AWS Account number from the cli tools: Secure Token Service
 aws sts get-caller-identity --output text --query 'Account'
@@ -12,6 +13,6 @@ scp -i "/path/to/keypair.pem"  file2copy.png  ec2-user@ec2-N-NN-NN-NNN.compute-1
 
 # creat a folder/subbucket in an already existed bucket 
 aws s3api put-object --bucket <your-bucket-name> --key <folder-name>/yourfile.txt --body yourfile.txt
-
-export AWS_PROFILE=user2  # user2 is in the /.aws/credentials
+aws s3 cp foo.txt s3://bigdata/Year/ --recursive
+ 
 
