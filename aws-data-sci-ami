@@ -17,3 +17,4 @@ cd samtools-1.9
 make
 make install
 
+wget https://github.com/broadinstitute/picard/releases/download/2.18.25/picard.jar
