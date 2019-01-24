@@ -1,5 +1,6 @@
 # docker commit running_container new_image_name
 docker commit sema4CNV yuliu2005ca/sema4cnv1:secondtry
+docker commit 7f42282bd9b2  rnaseq_v3
 
 docker login --username=yourhubusername
 
