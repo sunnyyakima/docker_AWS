@@ -1,0 +1,120 @@
+
+# in the s3 bucket containing fq_list_file
+# file containing fq file list has name : XXXsingleXXX, or XXXpairedXXX,
+# in the single reads file, each line for one sample
+# in the paired reads file:: sample1234_1.fastq.gz	sample1234_2.fastq.gz
+
+import os
+import sys, traceback
+import argparse
+import boto3
+import botocore
+import re
+
+star   = "STAR  --genomeDir /scratch/star_index --readFilesCommand zcat --outFilterMultimapNmax 1 --outReadsUnmapped Fastx  --outSAMtype BAM SortedByCoordinate  --twopa
+ssMode Basic  --runThreadN 10 "
+addRG0 = "java -Xmx20g -jar /picard/picard.jar AddOrReplaceReadGroups RGID=0 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=sample"
+rnaseqc = "java7 -Xmx20g -jar /NA_SeQC/RNA-SeQC_v1.1.8.jar  -singleEnd -r /scratch/ucsc_fa_hg19/hg19.fa -t /scratch/genecode_gtf_hg19/gencode.v19.annotation.gtf -rRNA /
+scratch/hg19_rRNA/hg19_rRNA.list " 
+
+
+def process_single_fq(infile):
+    sampl = re.sub(r".fastq.gz", "", infile)
+    os.system(star + " --readFilesIn " + infile + " --outFileNamePrefix " + sampl)
+    bamfile = sampl+ "Aligned.sortedByCoord.out.bam "
+    addRG1 = addRG0 + " I=" + bamfile + " O=" + sampl + "addRG.bam "
+    os.system(addRG1)
+    os.system("samtools index "+sampl + "addRG.bam ")
+    in_option  = " -s \"" + sampl + "|" + sampl+"addRG.bam" + "|RNAseq\" "
+    os.system(rnaseqc + " -o . " + in_option)
+#    print(rnaseqc + " -o "+sampl +"_QC " + in_option)
+    os.system("mkdir " + sampl + "_out")
+    os.system("mv " + sampl +"* " + sampl+"_out")
+
+
+def process_paired_fq(infile1, infile2):
+    sampl = re.sub(r"1.fastq.gz", "", infile1)
+    os.system(star + " --readFilesIn " + infile1 + " " + infile2 + " --outFileNamePrefix " + sampl)
+    bamfile = sampl+ "Aligned.sortedByCoord.out.bam "
+    addRG1 = addRG0 + " I=" + bamfile + " O=" + sampl + "addRG.bam "
+    os.system(addRG1)
+    os.system("samtools index "+sampl + "addRG.bam ")
+    in_option  = " -s \"" + sampl + "|" + sampl+"addRG.bam" + "|RNAseq\" "
+    os.system(rnaseqc + " -o . " + in_option)
+#    print(rnaseqc + " -o "+sampl +"_QC " + in_option)
+    os.system("mkdir " + sampl + "_out")
+    os.system("mv " + sampl +"* " + sampl+"_out")
+
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_bucket", help="The input bucket where those fastq are.")
+    parser.add_argument("fq_filenames", help="The name of file containing fastq file names")
+    parser.add_argument("output_bucket", help="the output bucket where the output goes")
+    args = parser.parse_args()
+    return args    # args.fq_filenames, args.input_bucket, args.output_bucket
+
+def down_from_s3(sss, bucket, file):
+    try:
+        sss.Bucket(bucket).download_file(file, file)
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            print("{} in {} does not exist.".format(file, bucket))
+        else:
+            raise
+
+def upload_2_s3(local_directory, bucket, destination):
+    client = boto3.client('s3')
+    for root, dirs, files in os.walk(local_directory): # enumerate local files recursively
+        for filename in files:
+            local_path = os.path.join(root, filename)  # construct the full local path
+            relative_path = os.path.relpath(local_path, local_directory)  # construct the full Dropbox path
+            s3_path = os.path.join(destination, relative_path)
+            print 'Searching "%s" in "%s"' % (s3_path, bucket)
+            try:
+                client.head_object(Bucket=bucket, Key=s3_path)
+                print "Path found on S3! Skipping %s..." % s3_path
+            except:
+                print "Uploading %s..." % s3_path
+                client.upload_file(local_path, bucket, s3_path)
+
+
+args = get_args()
+
+print("start processing files in {} from {} ".format(args.fq_filenames, args.input_bucket))
+
+s3 = boto3.resource('s3')
+
+down_from_s3(s3, args.input_bucket, args.fq_filenames)
+
+with open(args.fq_filenames) as file:
+    if re.search("single", args.fq_filenames) :
+        for line in file:
+            line = line.rstrip() 
+            print("downloading {} from {} ".format(line, args.input_bucket))
+            down_from_s3(s3, args.input_bucket, line)
+            print("align and QC for reads in {} to reference uisng STAR ".format(line))
+            process_single_fq(line)
+            
+            sample = re.sub(r".fastq.gz", "", line) 
+            infolder = os.getcwd() + "/" + sample+"_out"
+            outfolder = sample+"_out"
+            print("iploading results for {} to {} in s3 buckets: {}".format(sample, outfolder, args.output_bucket))
+            upload_2_s3(infolder, args.output_bucket, outfolder) 
+    if re.search("paired", args.fq_filenames) :
+        for line in file:
+            line = line.rstrip()
+            temp = line.split("\t")
+            print("downloading paired {} from {} ".format(line, args.input_bucket))
+            down_from_s3(s3, args.input_bucket, temp[0])
+            down_from_s3(s3, args.input_bucket, temp[1])
+            print("align and QC for reads in {} and {}  to reference uisng STAR ".format(temp[0], temp[1]))
+            process_paired_fq(temp[1], temp[1])
+
+            sample = re.sub(r"1.fastq.gz", "", temp[0])
+            infolder = os.getcwd() + "/" + sample+"_out"
+            outfolder = sample+"_out"
+            print("iploading results for {} to {} in s3 buckets: {}".format(sample, outfolder, args.output_bucket))
+            upload_2_s3(infolder, args.output_bucket, outfolder)
+
+
