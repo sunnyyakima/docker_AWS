@@ -1,4 +1,21 @@
 
+docker images
+
+docker system prune -a   # clear all images
+
+docker build -t dockername .
+
+aws ecr create-repository --repository-name data-sci-rnaseq-star-qc
+
+docker tag rnaseq_star_qc 051492874259.dkr.ecr.us-east-1.amazonaws.com/data-sci-rnaseq-star-qc
+
+aws ecr get-login --no-include-email --region us-east-1
+docker login -u AWS -p verylongstronggggggggggg
+
+docker push  051492874259.dkr.ecr.us-east-1.amazonaws.com/data-sci-rnaseq-star-qc
+
+
+
 # creat a repository
 aws ecr create-repository --repository-name hello-repository
 
